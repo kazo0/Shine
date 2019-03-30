@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Shine.Models;
 using Shine.Services;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
@@ -24,18 +25,26 @@ namespace Shine
 
         async void OnGetWeatherButtonClicked(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(_cityEntry.Text))
+            try
             {
-                WeatherData weatherData =
-                    await _openWeatherMapService.GetWeatherData(GenerateRequestUri(Constants.OpenWeatherMapEndpoint));
+                var location = await Geolocation.GetLastKnownLocationAsync() ?? await Geolocation.GetLocationAsync(new GeolocationRequest());
+
+                var requestUri = GenerateRequestUri(Constants.OpenWeatherMapEndpoint, location.Latitude, location.Longitude);
+                var weatherData = await _openWeatherMapService.GetWeatherData(requestUri);
+
                 BindingContext = weatherData;
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error retrieving weather information: {ex.Message}");
+            }
+ 
         }
 
-        string GenerateRequestUri(string endpoint)
+        string GenerateRequestUri(string endpoint, double lat, double lon)
         {
             string requestUri = endpoint;
-            requestUri += $"?q={_cityEntry.Text}";
+            requestUri += $"?lat={lat}&lon={lon}";
             requestUri += "&units=imperial"; // or units=metric
             requestUri += $"&APPID={Constants.OpenWeatherMapAPIKey}";
             return requestUri;
