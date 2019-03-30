@@ -15,12 +15,15 @@ namespace Shine
     public partial class MainPage : ContentPage
     {
         private readonly OpenWeatherMapService _openWeatherMapService;
+        private readonly IBrightnessService _brightnessService;
 
         public MainPage()
         {
             InitializeComponent();
             On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea(true);
             _openWeatherMapService = new OpenWeatherMapService();
+
+            _brightnessService = DependencyService.Get<IBrightnessService>();
         }
 
         async void OnGetWeatherButtonClicked(object sender, EventArgs e)
@@ -32,6 +35,7 @@ namespace Shine
                 var requestUri = GenerateRequestUri(Constants.OpenWeatherMapEndpoint, location.Latitude, location.Longitude);
                 var weatherData = await _openWeatherMapService.GetWeatherData(requestUri);
 
+                _brightnessService.SetBrightness(1f);
                 BindingContext = weatherData;
             }
             catch (Exception ex)
