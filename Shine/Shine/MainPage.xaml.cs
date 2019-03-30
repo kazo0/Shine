@@ -18,6 +18,7 @@ namespace Shine
         public MainPage()
         {
             InitializeComponent();
+            On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea(true);
             _openWeatherMapService = new OpenWeatherMapService();
         }
 
