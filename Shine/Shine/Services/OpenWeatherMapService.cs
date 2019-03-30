@@ -29,6 +29,10 @@ namespace Shine.Services
                     var content = await response.Content.ReadAsStringAsync();
                     weatherData = JsonConvert.DeserializeObject<WeatherData>(content);
                 }
+                else
+                {
+                    Debug.WriteLine($"Response from OpenWeatherMap was not successful: {response.ReasonPhrase}");
+                }
             }
             catch (Exception ex)
             {
