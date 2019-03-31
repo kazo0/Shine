@@ -23,6 +23,7 @@
             </Style>
 
             <converters:LongToDateTimeConverter x:Key="longToDateTimeConverter" />
+            <converters:WeatherIconConverter x:Key="weatherIconConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -38,11 +39,14 @@
 
         <ScrollView>
             <StackLayout Padding="10">
+                <Image Source="{Binding Weather[0], Converter={StaticResource weatherIconConverter}}"/>
+                <Label Text="{Binding Weather[0].Description}" 
+                       HorizontalOptions="Center"
+                       Style="{StaticResource labelResultStyle}" />
                 <Label Text="Location" 
                        Style="{StaticResource labelStyle}" />
                 <Label Text="{Binding Title}" 
                        Style="{StaticResource labelResultStyle}" />
-
                 <Label Text="Temperature" 
                        Style="{StaticResource labelStyle}" />
                 <Label Text="{Binding Main.Temperature}" 
